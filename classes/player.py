@@ -34,12 +34,3 @@ class Player():
             raise ValueError(f"The input {coords_alphanum} does not satisfy the syntaxe <[1-8][A-H]>")
 
         return(row,col)
-
-if __name__ == "__main__":
-    player1 = Player(color="X")
-    player2 = Player(color="O")
-
-    print(player1.color)
-
-    coord_num = player1.pawn_coord()
-    print(coord_num)

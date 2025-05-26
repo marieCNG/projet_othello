@@ -1,6 +1,5 @@
-from classes.player import Player
-from classes.pawn import Pawn
 from classes.board import Board
+from classes.player import Player
 
 class Engine():
     def __init__(self):
@@ -8,13 +7,24 @@ class Engine():
         self.player1 = Player('O')
         self.player2 = Player('X')
         self.current_player = self.player1
+    
     #Methods
     @property
     def current_player(self):
         return(self._current_player)
     
-    def board_update(self,last_coord:int*int):
+    def board_update(self,last_coord):
         self.othello_board.add_pawn_to_case(last_coord)
+
+        # i = row
+        # for direction in directions:
+        #     if direction[0] == 'V':
+        #         if direction[1] == 'H':
+        #             i -= 1
+        #         elif direction[1] == 'B':
+        #             i += 1
+
+
         pass # WIP, finish update by flipping Eaten pawn
 
     def switch_player(self):
