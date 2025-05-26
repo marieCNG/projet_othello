@@ -11,6 +11,9 @@ class Board:
     def add_pawn_to_case(self, coord_row, coord_col, pawn):
         self.array_of_cases[coord_row, coord_col] = pawn
 
+    def is_available(self, coord_row, coord_col):
+        return(self.array_of_cases[coord_row, coord_col].color == ' ')
+    
     def display_board(self):
         inter_row = "  +---+---+---+---+---+---+---+---+"
         print("Board state is")

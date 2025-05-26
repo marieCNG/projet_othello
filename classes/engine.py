@@ -1,5 +1,6 @@
 from classes.board import Board
 from classes.player import Player
+from classes.pawn import Pawn
 
 class Engine():
     def __init__(self):
@@ -12,9 +13,16 @@ class Engine():
     @property
     def current_player(self):
         return(self._current_player)
-    
+    @current_player.setter
+    def current_player(self,some_player:Player):
+        if not (some_player in [self.player1,self.player2]):
+            raise ValueError(f"{some_player} not a valid value")
+        self._current_player = some_player
+
     def board_update(self,last_coord):
-        self.othello_board.add_pawn_to_case(last_coord)
+        x,y = last_coord
+        current_color = self.current_player.color
+        self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
 
         # i = row
         # for direction in directions:
@@ -29,12 +37,15 @@ class Engine():
 
     def switch_player(self):
         if self.current_player == self.player1:
-            self._current_player = self.player1
-        else:
             self._current_player = self.player2
+        else:
+            self._current_player = self.player1
 
     def ask_player_pawn_coord(self):
-        (x,y) = self.current_player.pawn_coord()
+        good_coordinate = False
+        while not good_coordinate:
+            (x,y) = self.current_player.pawn_coord()
+            good_coordinate = 
         self.board_update((x,y))
         self.switch_player()
         return None
