@@ -1,14 +1,17 @@
-# from board import Board
-# from engine import Engine
-# from pawn import Pawn
+from classes.board import Board
+from classes.engine import Engine
+from classes.pawn import Pawn
 from classes.player import Player
 
-
-def __main__():
+def test_player():
     garryKasparov = Player('X')
     res = garryKasparov.pawn_coord()
-    #magnusCarlsen = Player('O')
-    print(res)
-    return None
+
+def test_engine():
+    partie = Engine()
+    partie.play()
+
+def __main__():
+    test_engine()
 
 __main__()

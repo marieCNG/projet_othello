@@ -1,6 +1,6 @@
-from player import Player
-from pawn import Pawn
-from board import Board
+from classes.player import Player
+from classes.pawn import Pawn
+from classes.board import Board
 
 class Engine():
     def __init__(self):
@@ -30,9 +30,11 @@ class Engine():
         return None
     
     def play(self):
-        while True : #WIP
+        i = 0
+        while True and i < 60: #WIP
             self.othello_board.display_board()
-            self.ask_player()
+            self.ask_player_pawn_coord()
+            i += 1
         self.display_winner()
         
     def display_winner():
