@@ -5,12 +5,35 @@ from board import Board
 class Engine():
     def __init__(self):
         self.othello_board = Board()
-        self.current_player = Player()
-        self.next_player = Player()
+        self.player1 = Player('O')
+        self.player2 = Player('X')
+        self.current_player = self.player1
     #Methods
-    def board_update(self):
-        pass #WIP
-    def ask_player(self):
-        pass #WIP
+    @property
+    def current_player(self):
+        return(self._current_player)
+    
+    def board_update(self,last_coord:int*int):
+        self.othello_board.add_pawn_to_case(last_coord)
+        pass # WIP, finish update by flipping Eaten pawn
+
+    def switch_player(self):
+        if self.current_player == self.player1:
+            self._current_player = self.player1
+        else:
+            self._current_player = self.player2
+
+    def ask_player_pawn_coord(self):
+        (x,y) = self.current_player.pawn_coord()
+        self.board_update((x,y))
+        self.switch_player()
+        return None
+    
     def play(self):
-        pass#WIP
+        while True : #WIP
+            self.othello_board.display_board()
+            self.ask_player()
+        self.display_winner()
+        
+    def display_winner():
+        pass #WIP
