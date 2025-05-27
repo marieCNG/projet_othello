@@ -20,5 +20,6 @@ class Board:
         print("    A   B   C   D   E   F   G   H")
         for i in range(8):
             print(inter_row)
-            print("{0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} |".format(i+1, self.array_of_cases[i, 0].color, self.array_of_cases[i, 1].color, self.array_of_cases[i, 2].color, self.array_of_cases[i, 3].color, self.array_of_cases[i, 4].color, self.array_of_cases[i, 5].color, self.array_of_cases[i, 6].color, self.array_of_cases[i, 7].color))
+            # print("{0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} |".format(i+1, self.array_of_cases[i, 0].color, self.array_of_cases[i, 1].color, self.array_of_cases[i, 2].color, self.array_of_cases[i, 3].color, self.array_of_cases[i, 4].color, self.array_of_cases[i, 5].color, self.array_of_cases[i, 6].color, self.array_of_cases[i, 7].color))
+            print("{0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} |".format(i+1, self.array_of_cases[i, 0].__str__(), self.array_of_cases[i, 1].__str__(), self.array_of_cases[i, 2].__str__(), self.array_of_cases[i, 3].__str__(), self.array_of_cases[i, 4].__str__(), self.array_of_cases[i, 5].__str__(), self.array_of_cases[i, 6].__str__(), self.array_of_cases[i, 7].__str__()))
         print(inter_row)
