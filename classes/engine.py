@@ -14,6 +14,7 @@ class Engine():
     def current_player(self):
         return(self._current_player)
     
+    @staticmethod
     def move_direction(sens_direction):
         row = 0
         col = 0
@@ -43,36 +44,44 @@ class Engine():
 
         return(row, col)
     
+    def isInGrid(self, i, j):
+        return i >= 0 and i < 8 and j >= 0 and j < 8
+    
+    def isPlayerColor(self,row_neighbor, col_neighbor):
+        return(self.current_player.color == self.othello_board.array_of_cases[row_neighbor, col_neighbor])
+    
+    def isOppositeColor(self,row_neighbor, col_neighbor):
+        case_has_color = not self.othello_board.is_available(row_neighbor, col_neighbor)
+        different_color = self.current_player.color != self.othello_board.array_of_cases[row_neighbor, col_neighbor].color
+        return(different_color and case_has_color)
+    
     def find_pawns_to_flip(self, coord_new_pawn, player):
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
 
         all_pawns_to_flip = list()
 
         for direction in directions:
-            row_add, col_add = Engine.move_direction(direction)
 
+            row_add, col_add = self.move_direction(direction)
             dir_pawns_to_flip = list()
+            row_neighbor = coord_new_pawn[0] + row_add 
+            col_neighbor = coord_new_pawn[1] + col_add
 
-            flipable = False
+            while self.isInGrid(row_neighbor, col_neighbor) \
+                and not self.othello_board.is_available(row_neighbor, col_neighbor) \
+                and self.isOppositeColor(row_neighbor, col_neighbor):
 
-            row_neighbor, col_neighbor = coord_new_pawn[0] + row_add, coord_new_pawn[1] + col_add
-            while row_neighbor <= 7 or row_neighbor >= 0 or col_neighbor <= 7 or col_neighbor >= 0:
                 neighbor_pawn = self.othello_board.array_of_cases[row_neighbor, col_neighbor]
-                if neighbor_pawn.color == ' ':
-                    break
-                elif neighbor_pawn.color == player.color:
-                    flipable = True
-                    break
-                else: # neighbor_pawn.color != player.color
-                    dir_pawns_to_flip.append(neighbor_pawn)
-                    row_neighbor += row_add
-                    col_neighbor += col_add
+                dir_pawns_to_flip.append(neighbor_pawn)
+                row_neighbor += row_add
+                col_neighbor += col_add
 
-            if flipable:
-                all_pawns_to_flip.extend(dir_pawns_to_flip)
-        
-        print(self.othello_board.array_of_cases)
-        print(all_pawns_to_flip)
+            # If this list is not empty,
+            # We must check that the last pawn is of the player's color
+            # if that is the case, the sandwiched pawns are flipped
+            if len(dir_pawns_to_flip) > 0:
+                if self.isInGrid(row_neighbor, col_neighbor) and self.isPlayerColor(row_neighbor, col_neighbor): # does it make a sandwich ?
+                    all_pawns_to_flip.extend(dir_pawns_to_flip)
 
         return all_pawns_to_flip
 
@@ -105,7 +114,7 @@ class Engine():
         return(x+1,chr(ord('A')+y))
     
     def is_adjacent(self, x, y):
-        return True
+        return True # WIP
 
     def ask_player_pawn_coord(self):
         coordinate_is_free = False
