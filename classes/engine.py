@@ -41,11 +41,16 @@ class Engine():
         else:
             self._current_player = self.player1
 
+    def coord_to_alphanum(self,x:int,y:int):
+        return(x+1,chr(ord('A')+y))
+    
     def ask_player_pawn_coord(self):
-        good_coordinate = False
-        while not good_coordinate:
+        coordinate_is_free = False
+        while not coordinate_is_free:
             (x,y) = self.current_player.pawn_coord()
-            good_coordinate = 
+            coordinate_is_free = self.othello_board.is_available(x,y)
+            if not coordinate_is_free:
+                print(f"The case {self.coord_to_alphanum(x,y)} is not available")
         self.board_update((x,y))
         self.switch_player()
         return None
