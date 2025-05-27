@@ -39,7 +39,10 @@ if __name__ == "__main__":
     print(vars(pawn_11))
 
     ### test engine
-    first_round = Engine()
-    print(Engine())
+    partie_test = Engine()
+    print(partie_test, vars(partie_test))
+    print(partie_test.othello_board.display_board())
 
-    print(first_round.move_direction("HD"))
+    partie_test.play()
+
+    # print(first_round.move_direction("HD"))

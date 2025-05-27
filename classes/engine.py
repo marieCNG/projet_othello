@@ -28,39 +28,53 @@ class Engine():
             elif sens_direction[1] == 'D':
                 col += 1
         elif sens_direction[0] == 'D':
-            if sens_direction[1:2] == 'GH':
+            if sens_direction[1:3] == 'GH':
                 row -= 1
                 col -= 1
-            elif sens_direction[1:2] == 'GB':
+            elif sens_direction[1:3] == 'GB':
                 row += 1
                 col -= 1
-            elif sens_direction[1:2] == 'DH':
+            elif sens_direction[1:3] == 'DH':
                 row -= 1
                 col += 1
-            elif sens_direction[1:2] == 'DB':
+            elif sens_direction[1:3] == 'DB':
                 row += 1
                 col += 1
 
-        return row, col
+        return(row, col)
     
-    def find_pawns_to_flip(coord_dep, board, player):
+    def find_pawns_to_flip(self, coord_new_pawn, player):
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
 
-        pawns_to_flip = list()
+        all_pawns_to_flip = list()
 
         for direction in directions:
             row_add, col_add = Engine.move_direction(direction)
 
-            row_neighbor, col_neighbor = coord_dep + row_add, coord_dep + col_add
-            while row_neighbor <= 7 or col_neighbor <= 7:
-                neighbor_pawn = board[row_neighbor, col_neighbor]
-                if neighbor_pawn.color != player.color:
+            dir_pawns_to_flip = list()
+
+            flipable = False
+
+            row_neighbor, col_neighbor = coord_new_pawn[0] + row_add, coord_new_pawn[1] + col_add
+            while row_neighbor <= 7 or row_neighbor >= 0 or col_neighbor <= 7 or col_neighbor >= 0:
+                neighbor_pawn = self.othello_board.array_of_cases[row_neighbor, col_neighbor]
+                if neighbor_pawn.color == ' ':
+                    break
+                elif neighbor_pawn.color == player.color:
+                    flipable = True
+                    break
+                else: # neighbor_pawn.color != player.color
+                    dir_pawns_to_flip.append(neighbor_pawn)
                     row_neighbor += row_add
                     col_neighbor += col_add
-                else:
-                    pawn_to_flip = board[row_neighbor, col_neighbor]
-                    pawns_to_flip.append(pawn_to_flip)
-        return pawns_to_flip
+
+            if flipable:
+                all_pawns_to_flip.extend(dir_pawns_to_flip)
+        
+        print(self.othello_board.array_of_cases)
+        print(all_pawns_to_flip)
+
+        return all_pawns_to_flip
 
     
     @current_player.setter
@@ -74,7 +88,7 @@ class Engine():
         current_color = self.current_player.color
         self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
 
-        pawns_to_flip = self.find_pawns_to_flip(last_coord, self.othello_board, self.current_player.color)
+        pawns_to_flip = self.find_pawns_to_flip(last_coord, self.current_player)
 
         for pawn in pawns_to_flip:
             pawn.flip_pawn()
@@ -90,12 +104,15 @@ class Engine():
     def coord_to_alphanum(self,x:int,y:int):
         return(x+1,chr(ord('A')+y))
     
+    def is_adjacent(self, x, y):
+        return True
+
     def ask_player_pawn_coord(self):
         coordinate_is_free = False
         while not coordinate_is_free:
             (x,y) = self.current_player.pawn_coord()
             coordinate_is_free = self.othello_board.is_available(x,y)
-            if not coordinate_is_free:
+            if not coordinate_is_free and self.is_adjacent(x,y): 
                 print(f"The case {self.coord_to_alphanum(x,y)} is not available")
         self.board_update((x,y))
         self.switch_player()
