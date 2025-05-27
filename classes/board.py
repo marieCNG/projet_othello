@@ -4,8 +4,10 @@ from classes.pawn import Pawn
 class Board:
     def __init__(self):
         temp = np.array([Pawn() for i in range(64)]).reshape((8,8))
-        temp[3,3] = temp[4,4] = Pawn(color="O") # white
-        temp[3,4] = temp[4,3] = Pawn(color="X") # black
+        temp[3,3] = Pawn(color="O") 
+        temp[4,4] = Pawn(color="O") # white
+        temp[3,4] = Pawn(color="X")
+        temp[4,3] = Pawn(color="X") # black
         self.array_of_cases = temp
 
     def add_pawn_to_case(self, coord_row, coord_col, pawn):
