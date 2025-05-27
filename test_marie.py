@@ -1,6 +1,7 @@
 from classes.board import Board
 from classes.pawn import Pawn
 from classes.player import Player
+from classes.engine import Engine
 
 if __name__ == "__main__":
 
@@ -19,8 +20,8 @@ if __name__ == "__main__":
 
     print(player1.color)
 
-    coord_num = player1.pawn_coord()
-    print(coord_num)
+    # coord_num = player1.pawn_coord()
+    # print(coord_num)
 
     ### test pawn
     pawn_11 = Pawn(color="O")
@@ -36,3 +37,9 @@ if __name__ == "__main__":
     print(pawn_12.color)
 
     print(vars(pawn_11))
+
+    ### test engine
+    first_round = Engine()
+    print(Engine())
+
+    print(first_round.move_direction("HD"))

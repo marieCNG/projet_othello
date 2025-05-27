@@ -14,7 +14,8 @@ class Engine():
         return(self._current_player)
     
     def move_direction(sens_direction):
-
+        row = 0
+        col = 0
         if sens_direction[0] == 'V':
             if sens_direction[1] == 'H':
                 row -= 1
@@ -41,29 +42,34 @@ class Engine():
 
         return row, col
     
-    def find_next_pawn_diff_color(coord_dep, board, player.color):
+    def find_pawns_to_flip(coord_dep, board, player):
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
+
+        pawns_to_flip = list()
+
         for direction in directions:
             row_add, col_add = Engine.move_direction(direction)
-            neighbor_pawn = board[coord_dep + row_add, coord_dep + col_add]
-            while neighbor_pawn.color != player.color:
-                row_add += row_add
-                col_add += col_add
-            
 
+            row_neighbor, col_neighbor = coord_dep + row_add, coord_dep + col_add
+            while row_neighbor <= 7 or col_neighbor <= 7:
+                neighbor_pawn = board[row_neighbor, col_neighbor]
+                if neighbor_pawn.color != player.color:
+                    row_neighbor += row_add
+                    col_neighbor += col_add
+                else:
+                    pawn_to_flip = board[row_neighbor, col_neighbor]
+                    pawns_to_flip.append(pawn_to_flip)
+        return pawns_to_flip
 
+    
 
     def board_update(self,last_coord):
         self.othello_board.add_pawn_to_case(last_coord)
 
-        i = row
-        for direction in directions:
-            if direction[0] == 'V':
-                if direction[1] == 'H':
-                    i -= 1
-                elif direction[1] == 'B':
-                    i += 1
+        pawns_to_flip = self.find_pawns_to_flip(last_coord, self.othello_board, self.current_player.color)
 
+        for pawn in pawns_to_flip:
+            pawn.flip_pawn()
 
         pass # WIP, finish update by flipping Eaten pawn
 
