@@ -7,7 +7,7 @@ class Player():
         notDone = True
         while notDone:
             try:
-                coords_alphanum = input("player {self.color}: Enter coordinates <[1-8][A-H]>: ")
+                coords_alphanum = input(f"player {self.color}: Enter coordinates <[1-8][A-H]>: ")
                 coord_numnum = self.convert_coord(coords_alphanum)
                 notDone = False
             except ValueError:

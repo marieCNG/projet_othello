@@ -1,5 +1,6 @@
 from classes.board import Board
 from classes.player import Player
+from classes.pawn import Pawn
 
 class Engine():
     def __init__(self):
@@ -62,9 +63,16 @@ class Engine():
         return pawns_to_flip
 
     
+    @current_player.setter
+    def current_player(self,some_player:Player):
+        if not (some_player in [self.player1,self.player2]):
+            raise ValueError(f"{some_player} not a valid value")
+        self._current_player = some_player
 
     def board_update(self,last_coord):
-        self.othello_board.add_pawn_to_case(last_coord)
+        x,y = last_coord
+        current_color = self.current_player.color
+        self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
 
         pawns_to_flip = self.find_pawns_to_flip(last_coord, self.othello_board, self.current_player.color)
 
@@ -75,12 +83,20 @@ class Engine():
 
     def switch_player(self):
         if self.current_player == self.player1:
-            self._current_player = self.player1
-        else:
             self._current_player = self.player2
+        else:
+            self._current_player = self.player1
 
+    def coord_to_alphanum(self,x:int,y:int):
+        return(x+1,chr(ord('A')+y))
+    
     def ask_player_pawn_coord(self):
-        (x,y) = self.current_player.pawn_coord()
+        coordinate_is_free = False
+        while not coordinate_is_free:
+            (x,y) = self.current_player.pawn_coord()
+            coordinate_is_free = self.othello_board.is_available(x,y)
+            if not coordinate_is_free:
+                print(f"The case {self.coord_to_alphanum(x,y)} is not available")
         self.board_update((x,y))
         self.switch_player()
         return None
