@@ -14,3 +14,10 @@ class Pawn:
             self._color = "O"
         elif self.color == "O":
             self._color = "X"
+    def __str__(self):
+        if self.color == 'O':
+            return('🟓')
+        elif self.color == 'X':
+            return('🟔')
+        else:
+            return(' ')
