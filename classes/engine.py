@@ -71,8 +71,8 @@ class Engine():
             if flipable:
                 all_pawns_to_flip.extend(dir_pawns_to_flip)
         
-        print(self.othello_board.array_of_cases)
-        print(all_pawns_to_flip)
+        # print(self.othello_board.array_of_cases)
+        print(list(map(lambda p: self.pawn_to_alphanum(p),all_pawns_to_flip)))
 
         return all_pawns_to_flip
 
@@ -125,6 +125,13 @@ class Engine():
             self.ask_player_pawn_coord()
             i += 1
         self.display_winner()
-        
+    def pawn_to_coord(self,p:Pawn):
+        for i in range(0,8):
+            for j in range(0,8):
+                if self.othello_board.array_of_cases[i,j] == p:
+                    return(i,j)
+    def pawn_to_alphanum(self,p:Pawn):
+        i,j = self.pawn_to_coord(p)
+        return(self.coord_to_alphanum(i,j))
     def display_winner():
         pass #WIP
