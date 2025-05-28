@@ -1,3 +1,4 @@
+import numpy as np
 from classes.board import Board
 from classes.player import Player
 from classes.pawn import Pawn
@@ -55,7 +56,7 @@ class Engine():
         different_color = self.current_player.color != self.othello_board.array_of_cases[row_neighbor, col_neighbor].color
         return (different_color and isNotEmpty)
     
-    def find_pawns_to_flip(self, coord_new_pawn, player):
+    def find_pawns_to_flip(self, coord_new_pawn):
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
 
         all_pawns_to_flip = list() 
@@ -119,8 +120,15 @@ class Engine():
     def coord_to_alphanum(self,x:int,y:int):
         return(x+1,chr(ord('A')+y))
     
-    def is_adjacent(self, x, y):
-        return True # WIP
+    def is_adjacent(self, row_coord, col_coord):
+        directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
+        for direction in directions:
+            row_add, col_add = self.move_direction(direction)
+            if not self.othello_board.is_available(row_coord + row_add, col_coord + col_add):
+                return True
+            else:
+                break
+        return False
 
     def ask_player_pawn_coord(self): #WIP reformat
         coordinate_is_free = False
@@ -145,7 +153,16 @@ class Engine():
             self.othello_board.display_board()
             self.ask_player_pawn_coord()
             i += 1
-        self.display_winner()
+        self.display_scores()
         
-    def display_winner():
-        pass #WIP
+    def display_scores(self):
+        board_array = self.othello_board.array_of_cases
+        score_O = np.count_nonzero(board_array == 'O')
+        score_X = np.count_nonzero(board_array == 'X')
+        if score_O > score_X:
+            winner_is = "Player O"
+        elif score_X > score_O:
+            winner_is = "Player X"
+        else:
+            winner_is = "no one"
+        print(f"Scores \n Player O: {score_O} \n Player X: {score_X} \n Winner is {winner_is}")
