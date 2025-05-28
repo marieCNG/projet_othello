@@ -6,8 +6,8 @@ from classes.pawn import Pawn
 class Engine():
     def __init__(self):
         self.othello_board = Board()
-        self.player1 = Player('O')
-        self.player2 = Player('X')
+        self.player1 = Player('X')
+        self.player2 = Player('O')
         self.current_player = self.player1
     
     #Methods
@@ -116,9 +116,10 @@ class Engine():
         """
         for row_coord in range(0,8):
             for col_coord in range(0,8):
-                if self.is_adjacent(row_coord, col_coord):
-                    if self.find_pawns_to_flip((row_coord, col_coord)): #True IFF the list contains one pawn to flip
-                        return(True)
+                if self.othello_board.is_available(row_coord, col_coord):
+                    if self.is_adjacent(row_coord, col_coord):
+                        if self.find_pawns_to_flip((row_coord, col_coord)): #True IFF the list contains one pawn to flip
+                            return(True)
         return(False)                     
 
 
@@ -141,7 +142,7 @@ class Engine():
                 break
         return False
 
-    def ask_player_pawn_coord(self): #WIP reformat
+    def player_play(self): #WIP reformat
         coordinate_is_free = False
         while not coordinate_is_free:
             (x,y) = self.current_player.pawn_coord()
@@ -152,12 +153,11 @@ class Engine():
         has_worked = self.board_update((x,y))
 
         if has_worked:
-            self.switch_player()
             return None
         else:
             print(f"The chosen coordinates ( {self.coord_to_alphanum(x,y)} ) does not flip any pawns. Choose other coordinates, you dirty noob.")
-            self.ask_player_pawn_coord()
-    
+            self.player_play()
+
     def play(self):
         i = 0
         a_player_played_last_turn = True
@@ -165,12 +165,16 @@ class Engine():
         while not game_is_over: #WIP move player switch from .ask_player_pawn_coord() to inside 
             self.othello_board.display_board()
             if self.can_current_player_play():
-                self.ask_player_pawn_coord()
+                self.player_play()
+                self.switch_player()
                 a_player_played_last_turn = True
+                i+=1
             else:
                 if a_player_played_last_turn:
                     print(f"Player {self.current_player.color} Cannot play, their turn is skipped")
                     a_player_played_last_turn = False
+                    self.switch_player()
+                    i+=1
                 else:
                     game_is_over = True
                     print(f"The game is over on turn {i}")
@@ -188,14 +192,13 @@ class Engine():
         else:
             winner_is = "no one"
         print(f"Scores \n Player O: {score_O} \n Player X: {score_X} \n Winner is {winner_is}")
-        self.display_winner()
+
     def pawn_to_coord(self,p:Pawn):
         for i in range(0,8):
             for j in range(0,8):
                 if self.othello_board.array_of_cases[i,j] == p:
                     return(i,j)
+                
     def pawn_to_alphanum(self,p:Pawn):
         i,j = self.pawn_to_coord(p)
         return(self.coord_to_alphanum(i,j))
-    def display_winner():
-        pass #WIP
