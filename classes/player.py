@@ -1,13 +1,30 @@
 class Player():
-    def __init__(self,color):
+    def __init__(self,color:str,displayColor:str):
         self.color = color
+        self.display_color = displayColor
         self.is_autonomous = False
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self,c:str):
+        self._color = c
+    
+    @property
+    def display_color(self):
+        return self._display_color
+
+    @display_color.setter
+    def display_color(self,c:str):
+        self._display_color = c
         
     def pawn_coord(self):
         notDone = True
         while notDone:
             try:
-                coords_alphanum = input(f"player {self.color}: Enter coordinates <[1-8][A-H]>: ")
+                coords_alphanum = input(f"player {self.__str__()}: Enter coordinates <[1-8][A-H]>: ")
                 coord_numnum = self.convert_coord(coords_alphanum)
                 notDone = False
             except ValueError:
@@ -34,3 +51,5 @@ class Player():
             raise ValueError(f"The input {coords_alphanum} does not satisfy the syntaxe <[1-8][A-H]>")
 
         return(row,col)
+    def __str__(self):
+        return self.display_color

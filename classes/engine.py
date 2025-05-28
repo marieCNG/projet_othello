@@ -5,12 +5,21 @@ from classes.pawn import Pawn
 
 class Engine():
     def __init__(self):
-        self.othello_board = Board()
-        self.player1 = Player('X')
-        self.player2 = Player('O')
+        self.display_colors = ['🟓','🟔',' ']
+        self.othello_board = Board(self.display_colors)
+        self.player1 = Player('X',self.display_colors[0])
+        self.player2 = Player('O',self.display_colors[1])
         self.current_player = self.player1
     
     #Methods
+    @property
+    def display_colors(self):
+        return(self._display_colors)
+
+    @display_colors.setter
+    def display_colors(self,l:list):
+        self._display_colors = l
+
     @property
     def current_player(self):
         return(self._current_player)
@@ -100,7 +109,7 @@ class Engine():
         pawns_to_flip = self.find_pawns_to_flip(playerMoveCoordinates)
 
         if len(pawns_to_flip) > 0:
-            self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
+            self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color,listOfDisplayColor = self.display_colors))
 
             for pawn in pawns_to_flip:
                 pawn.flip_pawn()
@@ -136,10 +145,11 @@ class Engine():
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
         for direction in directions:
             row_add, col_add = self.move_direction(direction)
-            if not self.othello_board.is_available(row_coord + row_add, col_coord + col_add):
-                return True
-            else:
-                break
+            if self.isInGrid(row_coord + row_add, col_coord + col_add):
+                if not self.othello_board.is_available(row_coord + row_add, col_coord + col_add):
+                    return True
+                else:
+                    continue
         return False
 
     def player_play(self): #WIP reformat
@@ -178,7 +188,6 @@ class Engine():
                 else:
                     game_is_over = True
                     print(f"The game is over on turn {i}")
-            i += 1
         self.display_scores()
         
     def display_scores(self):
