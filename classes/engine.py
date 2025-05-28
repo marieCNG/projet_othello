@@ -97,7 +97,7 @@ class Engine():
         x,y = playerMoveCoordinates
         current_color = self.current_player.color
         
-        pawns_to_flip = self.find_pawns_to_flip(playerMoveCoordinates, self.current_player)
+        pawns_to_flip = self.find_pawns_to_flip(playerMoveCoordinates)
 
         if len(pawns_to_flip) > 0:
             self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
@@ -110,7 +110,7 @@ class Engine():
         else:
             return(False)
         
-    def can_current_player_play():
+    def can_current_player_play(self):
         """
         return True IFF current player has a available case where he can play (i.e. flip pawn of opposit color)
         """
