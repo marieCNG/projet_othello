@@ -183,8 +183,14 @@ class Engine():
         
     def display_scores(self):
         board_array = self.othello_board.array_of_cases
-        score_O = np.count_nonzero(board_array == 'O')
-        score_X = np.count_nonzero(board_array == 'X')
+
+        list_color_pawns = list()
+        for pawn in board_array.flatten():
+            list_color_pawns.append(pawn.color)
+
+        score_O = list_color_pawns.count('O')
+        score_X = list_color_pawns.count('X')
+        
         if score_O > score_X:
             winner_is = "Player O"
         elif score_X > score_O:
