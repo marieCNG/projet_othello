@@ -48,22 +48,22 @@ class Engine():
         return i >= 0 and i < 8 and j >= 0 and j < 8
     
     def isPlayerColor(self,row_neighbor, col_neighbor):
-        return(self.current_player.color == self.othello_board.array_of_cases[row_neighbor, col_neighbor])
+        return (self.current_player.color == self.othello_board.array_of_cases[row_neighbor, col_neighbor].color)
     
     def isOppositeColor(self,row_neighbor, col_neighbor):
-        case_has_color = not self.othello_board.is_available(row_neighbor, col_neighbor)
+        isNotEmpty = not self.othello_board.is_available(row_neighbor, col_neighbor) #isNotEmpty
         different_color = self.current_player.color != self.othello_board.array_of_cases[row_neighbor, col_neighbor].color
-        return(different_color and case_has_color)
+        return (different_color and isNotEmpty)
     
     def find_pawns_to_flip(self, coord_new_pawn, player):
         directions = ['VH', 'VB', 'HG', 'HD', 'DGH', 'DGB', 'DDH', 'DDB']
 
-        all_pawns_to_flip = list()
+        all_pawns_to_flip = list() 
 
         for direction in directions:
 
             row_add, col_add = self.move_direction(direction)
-            dir_pawns_to_flip = list()
+            dir_pawns_to_flip = list() # pqzn to flip in direction
             row_neighbor = coord_new_pawn[0] + row_add 
             col_neighbor = coord_new_pawn[1] + col_add
 
@@ -92,17 +92,23 @@ class Engine():
             raise ValueError(f"{some_player} not a valid value")
         self._current_player = some_player
 
-    def board_update(self,last_coord):
-        x,y = last_coord
+    def board_update(self, playerMoveCoordinates):
+        x,y = playerMoveCoordinates
         current_color = self.current_player.color
-        self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
+        
+        pawns_to_flip = self.find_pawns_to_flip(playerMoveCoordinates, self.current_player)
 
-        pawns_to_flip = self.find_pawns_to_flip(last_coord, self.current_player)
+        if len(pawns_to_flip) > 0:
+            self.othello_board.add_pawn_to_case(x,y,Pawn(color=current_color))
 
-        for pawn in pawns_to_flip:
-            pawn.flip_pawn()
+            for pawn in pawns_to_flip:
+                pawn.flip_pawn()
+            
+            return(True)
 
-        pass # WIP, finish update by flipping Eaten pawn
+        else:
+            return(False)
+
 
     def switch_player(self):
         if self.current_player == self.player1:
@@ -116,16 +122,22 @@ class Engine():
     def is_adjacent(self, x, y):
         return True # WIP
 
-    def ask_player_pawn_coord(self):
+    def ask_player_pawn_coord(self): #WIP reformat
         coordinate_is_free = False
         while not coordinate_is_free:
             (x,y) = self.current_player.pawn_coord()
             coordinate_is_free = self.othello_board.is_available(x,y)
             if not coordinate_is_free and self.is_adjacent(x,y): 
                 print(f"The case {self.coord_to_alphanum(x,y)} is not available")
-        self.board_update((x,y))
-        self.switch_player()
-        return None
+        
+        has_worked = self.board_update((x,y))
+
+        if has_worked:
+            self.switch_player()
+            return None
+        else:
+            print(f"The chosen coordinates ( {self.coord_to_alphanum(x,y)} ) does not flip any pawns. Choose other coordinates, you dirty noob.")
+            self.ask_player_pawn_coord()
     
     def play(self):
         i = 0
