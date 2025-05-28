@@ -108,6 +108,17 @@ class Engine():
 
         else:
             return(False)
+        
+    def can_current_player_play():
+        """
+        return True IFF current player has a available case where he can play (i.e. flip pawn of opposit color)
+        """
+        for row_coord in range(0,8):
+            for col_coord in range(0,8):
+                if self.is_adjacent(row_coord, col_coord):
+                    if self.find_pawns_to_flip((row_coord, col_coord)): #True IFF the list contains one pawn to flip
+                        return(True)
+        return(False)                     
 
 
     def switch_player(self):
@@ -141,9 +152,20 @@ class Engine():
     
     def play(self):
         i = 0
-        while True and i < 60: #WIP
+        a_player_played_last_turn = True
+        game_is_over = False
+        while not game_is_over: #WIP move player switch from .ask_player_pawn_coord() to inside 
             self.othello_board.display_board()
-            self.ask_player_pawn_coord()
+            if self.can_current_player_play():
+                self.ask_player_pawn_coord()
+                a_player_played_last_turn = True
+            else:
+                if a_player_played_last_turn:
+                    print(f"Player {self.current_player.color} Cannot play, their turn is skipped")
+                    a_player_played_last_turn = False
+                else:
+                    game_is_over = True
+                    print(f"The game is over on turn {i}")
             i += 1
         self.display_winner()
     def pawn_to_coord(self,p:Pawn):
